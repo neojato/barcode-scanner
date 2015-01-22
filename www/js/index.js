@@ -53,6 +53,15 @@ var app = {
         for( var i = 0; i < captureElements.length; i++) {
             captureElements[i].setAttribute('style', 'display:block;');
         }
+      
+        app.db = window.openDatabase('scannerDB', '1.0', 'Scanner DB', 1000000);
+        
+        app.db.transaction(function(tx) {
+            tx.executeSql('CREATE TABLE IF NOT EXISTS CODES (id INTEGER PRIMARY KEY AUTOINCREMENT, data, format)');
+          },
+          app.dberrorCB,
+          app.getCodeHistory
+        );
 
     },
     
