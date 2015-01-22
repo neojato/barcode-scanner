@@ -69,5 +69,16 @@ var app = {
         };
 
     },
+  
+    getCodeHistory: function() {
+      app.db.transaction(function(tx) {
+        tx.executeSql(
+        	 'SELECR * FROM CODES',
+          [],
+          app.querySuccess,
+          app.dberrorCB
+        );
+      }, app.dberrorCB);
+    }
     
 };
