@@ -3,7 +3,7 @@
 <!-- config.xml reference: https://build.phonegap.com/docs/config-xml -->
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
-        id        = "com.phonegap.barcode_scanner"
+        id        = "com.trinominis.barcode_scanner"
         version   = "1.0.0">
 
     <name>PhoneGap Barcode</name>
@@ -12,8 +12,8 @@
         A Barcode scanner application
     </description>
 
-    <author href="http://www.yourdomain.com" email="you@yourdomain.com">
-        Your Name
+    <author href="http://www.trinominis.com" email="trinominis@gmail.com">
+        Kyle Paul
     </author>
 
 
@@ -32,7 +32,7 @@
 
     <!-- START Preferences -->
     <!-- Customize your app and platform with the preference element. -->
-    <preference name="phonegap-version"           value="2.9.0" />
+    <preference name="phonegap-version"           value="3.6.3" />
     <preference name="orientation"                value="default" />
     <preference name="target-device"              value="universal" />
     <preference name="fullscreen"                 value="true" />
