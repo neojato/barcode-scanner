@@ -62,6 +62,11 @@ var app = {
           app.dberrorCB,
           app.getCodeHistory
         );
+      
+        var scanButton = document.getElementById('scanButton');
+        scanButton.onclick = function() {
+          app.performScan();
+        };
 
     },
     
