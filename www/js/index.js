@@ -110,5 +110,29 @@ var app = {
 
 	dberrorCB: function(error) {
      alert('Error processing SQL: ' + error.message);
+   },
+
+	performScan: function() {
+     var scanner = cordova.require('cordova/plugin/BarcodeScanner');
+     scanner.scan(function(result) {
+       alert('We have a barcode\n'
+            + 'Result: ' + result.text + '\n'
+            + 'Format: ' + result.format + '\n'
+            + 'Cancelled: ' + result.cancelled
+       );
+       
+       // insert item into database
+       app.db.transaction(function(tx) {
+           tx.executeSql('INSERT INTO CODES (data, format) VALUES ("' + result.text + '","' + result.format + '")');
+         },
+         app.dberrorCB,
+         app.getCodeHistory
+       );
+     },
+
+     function(error) {
+       alert('Scanning failed: ' + error);
+     }
+     );
    }
 };
