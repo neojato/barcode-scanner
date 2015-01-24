@@ -86,6 +86,17 @@ var app = {
        listItem.innerHTML = results.rows.item(i).data;
        listItem.class = 'listItem';
        // add click handler here
+       listItem.onclick = function() {
+         var thisID = this.getAttribute('id');
+         app.db.transaction(function(tx) {
+           tx.executeSql(
+             'SELECT * FROM CODES WHERE id="' + thisID + '"',
+             [],
+             app.recordResults,
+             app.dberrorCB
+           );
+         }, app.dberrorCB);
+       };
      };
      
      listElement.appendChild(listItem);
