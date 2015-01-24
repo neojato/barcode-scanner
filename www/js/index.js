@@ -100,5 +100,13 @@ var app = {
      };
      
      listElement.appendChild(listItem);
-   }
+   },
+
+	recordResults: function(tx, results) {
+     if(results.rows.item(0).format == 'QR_CODE') {
+       var ref = window.open(results.rows.item(0).data, '_blank', 'location=yes');
+     }
+   },
+
+	
 };
