@@ -18,67 +18,76 @@
  */
 
 var app = {
-    
-    db: "",
-    
-    // Application Constructor
-    initialize: function() {        
-        this.bindEvents();
-    },
-    // Bind Event Listeners
-    //
-    // Bind any events that are required on startup. Common events are:
-    // 'load', 'deviceready', 'offline', and 'online'.
-    bindEvents: function() {
-        document.addEventListener('deviceready', this.onDeviceReady, false);
-    },
-    // deviceready Event Handler
-    //
-    // The scope of 'this' is the event. In order to call the 'receivedEvent'
-    // function, we must explicity call 'app.receivedEvent(...);'
-    onDeviceReady: function() {
-        app.receivedEvent('deviceready');
-    },
-    // Update DOM on a Received Event
-    receivedEvent: function(id) {
-    
-        var parentElement = document.getElementById(id);
-        var listeningElement = parentElement.querySelector('.listening');
-        var receivedElement = parentElement.querySelector('.received');
+	db: "",
+	// Application Constructor
+	initialize: function() {
+     this.bindEvents();
+   },
+	// Bind Event Listeners
+	//
+	// Bind any events that are required on startup. Common events are:
+	// 'load', 'deviceready', 'offline', and 'online'.
+	bindEvents: function() {
+     document.addEventListener('deviceready', this.onDeviceReady, false);
+   },
+	// deviceready Event Handler
+	//
+	// The scope of 'this' is the event. In order to call the 'receivedEvent'
+	// function, we must explicity call 'app.receivedEvent(...);'
+	onDeviceReady: function() {
+     app.receivedEvent('deviceready');
+   },
+  	// Update DOM on a Received Event
+	receivedEvent: function(id) {
+     var parentElement = document.getElementById(id);
+     var listeningElement = parentElement.querySelector('.listening');
+     var receivedElement = parentElement.querySelector('.received');
 
-        listeningElement.setAttribute('style', 'display:none;');
-        receivedElement.setAttribute('style', 'display:block;');
-            
-        var captureElements = document.body.querySelectorAll('.capture');
-        for( var i = 0; i < captureElements.length; i++) {
-            captureElements[i].setAttribute('style', 'display:block;');
-        }
-      
-        app.db = window.openDatabase('scannerDB', '1.0', 'Scanner DB', 1000000);
-        
-        app.db.transaction(function(tx) {
-            tx.executeSql('CREATE TABLE IF NOT EXISTS CODES (id INTEGER PRIMARY KEY AUTOINCREMENT, data, format)');
-          },
-          app.dberrorCB,
-          app.getCodeHistory
-        );
-      
-        var scanButton = document.getElementById('scanButton');
-        scanButton.onclick = function() {
-          app.performScan();
-        };
+     listeningElement.setAttribute('style', 'display:none;');
+     receivedElement.setAttribute('style', 'display:block;');
 
-    },
+     var captureElements = document.body.querySelectorAll('.capture');
+     for( var i = 0; i < captureElements.length; i++) {
+       captureElements[i].setAttribute('style', 'display:block;');
+     }
+
+     app.db = window.openDatabase('scannerDB', '1.0', 'Scanner DB', 1000000);
+     app.db.transaction(function(tx) {
+       tx.executeSql('CREATE TABLE IF NOT EXISTS CODES (id INTEGER PRIMARY KEY AUTOINCREMENT, data, format)');
+     },
+                        app.dberrorCB,
+                        app.getCodeHistory
+                       );
+
+     var scanButton = document.getElementById('scanButton');
+     scanButton.onclick = function() {
+       app.performScan();
+     };
+	},
   
-    getCodeHistory: function() {
-      app.db.transaction(function(tx) {
-        tx.executeSql(
-        	 'SELECR * FROM CODES',
-          [],
-          app.querySuccess,
-          app.dberrorCB
-        );
-      }, app.dberrorCB);
-    }
-    
+	getCodeHistory: function() {
+     app.db.transaction(function(tx) {
+       tx.executeSql(
+         'SELECR * FROM CODES',
+         [],
+         app.querySuccess,
+         app.dberrorCB
+       );
+     }, app.dberrorCB);
+	},
+
+	querySuccess: function(tx, results) {
+     var listElement = document.getElementById('list');
+     var len = results.rows.length;
+     var output = '';
+     for(var i=0; i<len; i++) {
+       var listItem = document.getElementById('li');
+       listItem.id = results.rows.item(i).id;
+       listItem.innerHTML = results.rows.item(i).data;
+       listItem.class = 'listItem';
+       // add click handler here
+     };
+     
+     listElement.appendChild(listItem);
+   }
 };
