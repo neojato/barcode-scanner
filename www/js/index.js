@@ -52,12 +52,13 @@ var app = {
      }
 
      app.db = window.openDatabase('scannerDB', '1.0', 'Scanner DB', 1000000);
+     console.log('create table');
      app.db.transaction(function(tx) {
-       tx.executeSql('CREATE TABLE IF NOT EXISTS CODES (id INTEGER PRIMARY KEY AUTOINCREMENT, data, format)');
-     },
-                        app.dberrorCB,
-                        app.getCodeHistory
-                       );
+         tx.executeSql('CREATE TABLE IF NOT EXISTS CODES (id INTEGER PRIMARY KEY AUTOINCREMENT, data, format)');
+       },
+       app.dberrorCB,
+       app.getCodeHistory
+     );
 
      var scanButton = document.getElementById('scanButton');
      scanButton.onclick = function() {
@@ -66,9 +67,10 @@ var app = {
 	},
   
 	getCodeHistory: function() {
+     console.log('code history');
      app.db.transaction(function(tx) {
        tx.executeSql(
-         'SELECR * FROM CODES',
+         'SELECT * FROM CODES',
          [],
          app.querySuccess,
          app.dberrorCB
@@ -80,6 +82,7 @@ var app = {
      var listElement = document.getElementById('list');
      var len = results.rows.length;
      var output = '';
+     console.log('query success');
      for(var i=0; i<len; i++) {
        var listItem = document.getElementById('li');
        listItem.id = results.rows.item(i).id;
@@ -104,35 +107,39 @@ var app = {
 
 	recordResults: function(tx, results) {
      if(results.rows.item(0).format == 'QR_CODE') {
+       console.log('results');
        var ref = window.open(results.rows.item(0).data, '_blank', 'location=yes');
      }
    },
 
 	dberrorCB: function(error) {
+     console.log('db error');
      alert('Error processing SQL: ' + error.message);
    },
 
 	performScan: function() {
      var scanner = cordova.require('cordova/plugin/BarcodeScanner');
-     scanner.scan(function(result) {
-       alert('We have a barcode\n'
-            + 'Result: ' + result.text + '\n'
-            + 'Format: ' + result.format + '\n'
-            + 'Cancelled: ' + result.cancelled
-       );
-       
-       // insert item into database
-       app.db.transaction(function(tx) {
-           tx.executeSql('INSERT INTO CODES (data, format) VALUES ("' + result.text + '","' + result.format + '")');
-         },
-         app.dberrorCB,
-         app.getCodeHistory
-       );
-     },
+     scanner.scan(
+       function(result) {
+         alert('We have a barcode\n'
+           + 'Result: ' + result.text + '\n'
+           + 'Format: ' + result.format + '\n'
+           s+ 'Cancelled: ' + result.cancelled
+         );
 
-     function(error) {
-       alert('Scanning failed: ' + error);
-     }
+         // insert item into database
+         console.log('insert barcode');
+         app.db.transaction(function(tx) {
+             tx.executeSql('INSERT INTO CODES (data, format) VALUES ("' + result.text + '","' + result.format + '")');
+           },
+           app.dberrorCB,
+           app.getCodeHistory
+         );
+     	 },
+
+       function(error) {
+         alert('Scanning failed: ' + error);
+       }
      );
    }
 };
