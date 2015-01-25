@@ -52,7 +52,6 @@ var app = {
      }
 
      app.db = window.openDatabase('scannerDB', '1.0', 'Scanner DB', 1000000);
-     console.log('create table');
      app.db.transaction(function(tx) {
          tx.executeSql('CREATE TABLE IF NOT EXISTS CODES (id INTEGER PRIMARY KEY AUTOINCREMENT, data, format)');
        },
@@ -67,7 +66,6 @@ var app = {
 	},
   
 	getCodeHistory: function() {
-     console.log('code history');
      app.db.transaction(function(tx) {
        tx.executeSql(
          'SELECT * FROM CODES',
@@ -82,9 +80,8 @@ var app = {
      var listElement = document.getElementById('list');
      var len = results.rows.length;
      var output = '';
-     console.log('query success');
      for(var i=0; i<len; i++) {
-       var listItem = document.getElementById('li');
+       var listItem = document.createElement('li');
        listItem.id = results.rows.item(i).id;
        listItem.innerHTML = results.rows.item(i).data;
        listItem.class = 'listItem';
@@ -107,13 +104,11 @@ var app = {
 
 	recordResults: function(tx, results) {
      if(results.rows.item(0).format == 'QR_CODE') {
-       console.log('results');
        var ref = window.open(results.rows.item(0).data, '_blank', 'location=yes');
      }
    },
 
 	dberrorCB: function(error) {
-     console.log('db error');
      alert('Error processing SQL: ' + error.message);
    },
 
@@ -128,7 +123,6 @@ var app = {
          );
 
          // insert item into database
-         console.log('insert barcode');
          app.db.transaction(function(tx) {
              tx.executeSql('INSERT INTO CODES (data, format) VALUES ("' + result.text + '","' + result.format + '")');
            },
