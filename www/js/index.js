@@ -124,7 +124,7 @@ var app = {
          alert('We have a barcode\n'
            + 'Result: ' + result.text + '\n'
            + 'Format: ' + result.format + '\n'
-           s+ 'Cancelled: ' + result.cancelled
+           + 'Cancelled: ' + result.cancelled
          );
 
          // insert item into database
