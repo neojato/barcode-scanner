@@ -97,9 +97,8 @@ var app = {
            );
          }, app.dberrorCB);
        };
+       listElement.appendChild(listItem);
      };
-     
-     listElement.appendChild(listItem);
    },
 
 	recordResults: function(tx, results) {
